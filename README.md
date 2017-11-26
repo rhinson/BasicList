@@ -12,3 +12,16 @@ Of course, all methods need to have unit-tests to verify corner cases and happy-
 
 Moreover, you need to provide a detailed estimate for how often on average ANY iterator's next() method gets called (depending on the value of L) when addition(Iterator<NodeList<Integer>> iterator) gets called.
 
+# Big O Notation
+
+In my code, iterator next() is called one time per generated number within the addition(Iterator<NodeList<Integer>> iterator) method.
+When the addition(Iterator<NodeList> iteratator) calls the addition(NodeList<Integer> nodeList1, NodeList<Integer> nodeList2) method,
+the iterator next() method is called up to twice per digit when summing the nodeList inputs, up to sixty times total.
+The addition(NodeList<Integer> nodeList1, NodeList<Integer> nodeList2) method also calls the reverseList(Iterator<Integer> iter) method up to three times 
+per iteration.
+The reverse(Iterator<Integer> iter) method calls iterator next() up to thirty times per call.
+
+In all the iterator next() is called up to 90 times per pair of nodeLists entered.
+
+The number of calls is a linear growth based on the number of nodes in each nodeList and number of summed nodeLists
+resulting in an O(n) designation. 

@@ -64,6 +64,7 @@ public class Project2 {
         for (int i = 0; i < L; i++) {
             listOfLists.append(generateNumber(L));
         }
+
         project.save(project.addition(listOfLists.iterator()), "result.bin");
         print(project.load("result.bin"));
     }
@@ -76,7 +77,52 @@ public class Project2 {
      * @return nodeList representing the sum (add) of nodeList1 and nodeList2, without leading '0'
      */
     public NodeList<Integer> addition(NodeList<Integer> nodeList1, NodeList<Integer> nodeList2) {
-        return new NodeList<>();
+        NodeList<Integer> myNodeList1 = reverseList(nodeList1.iterator());
+        NodeList<Integer> myNodeList2 = reverseList(nodeList2.iterator());
+
+        NodeList<Integer> result = new NodeList<>();
+
+        int carryOver = 0;
+        int sum;
+        int removeThis;
+
+        while (myNodeList1.iterator().hasNext() || myNodeList2.iterator().hasNext()) {
+
+            sum = carryOver;
+
+            if (myNodeList1.iterator().hasNext()) {
+                    removeThis = myNodeList1.iterator().next();
+                    sum = sum + removeThis;
+                    myNodeList1.remove(removeThis);
+            }
+
+            if (myNodeList2.iterator().hasNext()) {
+                    removeThis = myNodeList2.iterator().next();
+                    sum = sum + removeThis;
+                    myNodeList2.remove(removeThis);
+            }
+
+            carryOver = sum/10;
+            sum = sum%10;
+
+            result.append(sum);
+        }
+
+        if (carryOver == 1) {
+            result.append(carryOver);
+        }
+
+        if (result.iterator().hasNext()) {
+            result = reverseList(result.iterator());
+        } else {
+            result.append(0);
+        }
+
+        while (result.iterator().next() == 0 && result.getLength() != 1) {  // Removing leading 0's but not a single 0
+            result.remove(0);
+        }
+
+        return result;
     }
 
     /**
@@ -86,7 +132,18 @@ public class Project2 {
      * @return nodeList representing the sum (add) of all very long numbers, without leading '0'
      */
     public NodeList<Integer> addition(Iterator<NodeList<Integer>> iterator) {
-        return null;
+        if (!iterator.hasNext()) {
+            return new NodeList<Integer>();
+        }
+
+        NodeList<Integer> result = iterator.next();
+
+        while (iterator.hasNext()) {
+            NodeList<Integer> nodeList2 = iterator.next();
+            result = addition(result,nodeList2);
+        }
+
+        return result;
     }
 
     /**
@@ -95,7 +152,27 @@ public class Project2 {
      * @param nodeList NodeList&lt;Integer&gt;
      * @param fileName String
      */
-    public void save(NodeList<Integer> nodeList, String fileName) { }
+    public void save(NodeList<Integer> nodeList, String fileName) {
+        DataOutputStream dos = null;
+        try {
+            dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(new File(fileName))));
+            for (Integer i : nodeList) {
+                try {
+                    dos.writeInt(i);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            dos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Loads a very large number from a file
@@ -104,6 +181,41 @@ public class Project2 {
      * @return NodeList&lt;Integer&gt;
      */
     public NodeList<Integer> load(final String fileName) {
-        return new NodeList<>();
+        DataInputStream dis = null;
+        NodeList<Integer> result = new NodeList<>();
+
+        try {
+            dis = new DataInputStream(new BufferedInputStream(new FileInputStream(new File(fileName))));
+            try {
+                while (dis.available() > 0) {
+                    int i = dis.readInt();
+                    result.append(i);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            dis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public static NodeList<Integer> reverseList (Iterator<Integer> iter) {
+        if (!iter.hasNext()) {
+            return new NodeList<Integer>();
+        }
+
+        int i = iter.next();
+        NodeList<Integer> reversed = reverseList(iter);
+        reversed.append(i);
+
+        return reversed;
     }
 }

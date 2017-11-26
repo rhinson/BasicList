@@ -73,6 +73,15 @@ public final class NodeList<E> implements Iterable<E> {
         return false;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (Object item : this) {
+            result.append(item.toString());
+        }
+        return result.toString();
+    }
+
     // implement Iterable<E> interface
     @Override
     public Iterator<E> iterator() {
