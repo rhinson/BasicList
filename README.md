@@ -25,3 +25,12 @@ In all the iterator next() is called up to 90 times per pair of nodeLists entere
 
 The number of calls is a linear growth based on the number of nodes in each nodeList and number of summed nodeLists
 resulting in an O(n) designation. 
+
+# Correction
+
+For a Nodelist of a given length, when the number of nodelists increases, the number of calls to next() is constant, but
+when the length of the nodelist grows with the number of nodelists, the growth of calls to next() is exponential. 
+
+
+
+

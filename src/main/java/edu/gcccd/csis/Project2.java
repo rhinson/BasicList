@@ -65,7 +65,9 @@ public class Project2 {
             listOfLists.append(generateNumber(L));
         }
 
+        Node.resetCounter();
         project.save(project.addition(listOfLists.iterator()), "result.bin");
+        System.out.println("My next counter is: " + Node.getCounter());
         print(project.load("result.bin"));
     }
 
